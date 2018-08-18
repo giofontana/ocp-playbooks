@@ -1,0 +1,40 @@
+---
+- name: Register Bastion
+  redhat_subscription:
+    state: present
+    username: {{ rhn_username }}
+    password: {{ rhn_passwd }}
+    pool_ids: {{ rhn_poolid }}
+
+- name: Disable all repositories
+  rhsm_repository:
+    name: *
+    state: disabled
+
+- name: Enable ocp repos
+  rhsm_repository:
+    name: "{{ item }}"
+    state: disabled
+  with items:
+    - rhel-7-server-rpms
+    - rhel-7-server-extras-rpms
+    - rhel-7-server-ansible-2.4-rpms
+    - rhel-7-server-ose-{{ ocp_version }}-rpms            #### TODO: TRANSFORMAR EM VAR
+
+- name: Install atomic-openshift-utils
+  yum:
+    name: atomic-openshift-utils
+    state: present
+
+- name: Creates temp dir
+  file: path=/tmp/ocp-install-dir state=directory
+
+- name: Generate SSH keys
+  shell: ssh-keygen -b 2048 -t rsa -f /root/.ssh/id_rsa -q -N ""
+  args:
+    creates: /root/.ssh/id_rsa
+
+- name: Create pre-inventory in bastion
+  template:
+    src: templates/hosts.prepare
+    dest: /tmp/ocp-install-dir/hosts.prepare

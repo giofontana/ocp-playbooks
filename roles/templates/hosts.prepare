@@ -1,0 +1,12 @@
+[masters]
+master-1.ocp
+master-2.ocp
+master-3.ocp
+
+[nodes]
+infra-1.ocp
+infra-2.ocp
+infra-3.ocp
+app-1.ocp
+app-2.ocp
+app-3.ocp
