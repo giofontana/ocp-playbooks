@@ -1,2 +1,10 @@
 ---
 # vars file for ./roles
+
+# RHN
+rhn_username: xxxxx
+rhn_password: yyyyy
+rhn_poolid: zzzz
+
+# OCP
+ocp_version: 3.9
